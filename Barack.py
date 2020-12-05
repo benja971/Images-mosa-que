@@ -3,13 +3,11 @@ from PIL import Image as im, ImageDraw as imdrw
 from random import randint, choice
 
 
-
-def diffTuples(t1, i, j)->tuple:
-	c = [t1[0], t1[0], t1[0]]
-	c[j] = t1[j] - i
-
+def diff(t, i, j):
+	c = [t[0], t[1], t[2]]
+	c[j] += i
 	return (c[0], c[1], c[2])
-
+ 
 def dist(t1, t2):
 	c = []
 
@@ -21,9 +19,9 @@ def dist(t1, t2):
 
 system("cls")
 
-PATH = "D:/Drive/test"
+PATH = "D:/Drive/Images"
 SCALE = 50 # Taille des carrés
-DIVS = 150 # Nombre d'images en hauteurs
+DIVS = 100 # Nombre d'images en hauteurs
 
 if __name__ == "__main__":
 	files = listdir(f"{PATH}")
@@ -63,21 +61,19 @@ if __name__ == "__main__":
 	refW, refH = ref.size
 	W, H = DIVS * refW // refH, DIVS
 	res = im.new("RGB", (W * SCALE, H * SCALE))
-
+	pixels = {}
 	ctx = imdrw.Draw(res)
 	for x in range(W):
 		for y in range(H):
 			coords = int(x/W*refW), int(y/H*refH)
 			c = ref.getpixel(coords)
 			x1 = x * SCALE 
-			y1 = y * SCALE 
-			x2 = (x+1) * SCALE 
-			y2 = (y+1) * SCALE
+			y1 = y * SCALE
+
 			for j in range(3):
-				for i in range(-120, 120):
-					if dist(c, diffTuples(c, i, j)) <= (1, 1, 1):
-						if diffTuples(c, i, j) in images:
-							res.paste(choice((images[diffTuples(c, i, j)])), (x1, y1))
+				for i in range(-5, 5):
+					if diff(c, i, j) in images:
+						res.paste(choice(images[diff(c, i, j)]), (x1, y1))
 
 print(f"Creating {PATH}.png...")
 res.save(PATH + ".png")
