@@ -1,8 +1,12 @@
 from google_images_search import GoogleImagesSearch
+from dotenv import load_dotenv
+import os
+
+config = load_dotenv()
 
 # you can provide API key and CX using arguments,
 # or you can set environment variables: GCS_DEVELOPER_KEY, GCS_CX
-gis = GoogleImagesSearch('AIzaSyCtzVaBxxBR6JFphMOuAm3P2HvWtr9Pe0E', '1414e3890e57991f2')
+gis = GoogleImagesSearch(os.getenv("GCS_DEVELOPER_KEY"), os.getenv("GCS_CX"))
 
 # define search params:
 # _search_params = {
@@ -37,8 +41,7 @@ _search_params = {
 # this will search, download and resize:
 # gis.search(search_params=_search_params, path_to_dir='/images/', width=500, height=500)
 
-# search first, then download and resize afterwards:
+# search first, then download and analyze images afterwards:
 gis.search(search_params=_search_params)
 for image in gis.results():
     image.download('./images/')
-    # image.resize(500, 500)
